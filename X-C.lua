@@ -6,7 +6,6 @@ local SAVE_INTERVAL = 0.01
 local logs = {}
 local lastSave = 0
 local isRunning = true
-print("Console.pid → Started (silent mode)")
 LogService.MessageOut:Connect(function(message, messageType)
 	if not isRunning then return end
 	local prefix = ""
@@ -43,3 +42,6 @@ game:BindToClose(function()
 		end)
 	end
 end)
+
+task.wait(0.05)
+print("NOTHING-X")
