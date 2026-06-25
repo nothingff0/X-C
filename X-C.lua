@@ -1,11 +1,8 @@
 local LogService = game:GetService("LogService")
 local RunService = game:GetService("RunService")
 local FILE_NAME = "Console.pid"
-local MAX_LINES = 1          
-local SAVE_INTERVAL = 0.01
-local logs = {}
-local lastSave = 0
 local isRunning = true
+local lastLog = ""
 LogService.MessageOut:Connect(function(message, messageType)
 	if not isRunning then return end
 	local prefix = ""
@@ -18,20 +15,21 @@ LogService.MessageOut:Connect(function(message, messageType)
 	elseif messageType == Enum.MessageType.MessageInfo then
 		prefix = "[INFO] "
 	end
-	logs = {prefix .. message}   
+	lastLog = prefix .. message
 	pcall(function()
-		writefile(FILE_NAME, table.concat(logs, "\n") .. "\n")
+		writefile(FILE_NAME, lastLog .. "\n")
 	end)
 end)
-RunService.Heartbeat:Connect(function()
-	if not isRunning then return end
+task.wait(0.1)
+print("NOTHING-X")
+task.wait(0.05)
+pcall(function()
+	writefile(FILE_NAME, lastLog .. "\n")
 end)
 game:BindToClose(function()
-	if isRunning and #logs > 0 then
+	if isRunning then
 		pcall(function()
-			writefile(FILE_NAME, table.concat(logs, "\n") .. "\n")
+			writefile(FILE_NAME, lastLog .. "\n")
 		end)
 	end
 end)
-task.wait(1)
-print("NOTHING-X")
